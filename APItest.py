@@ -20,24 +20,36 @@ class TuBo_GetAPI(object):
         # 响应数据字段缺少保存文件
         self.lack_response_err_file = open('lack_response_err_file.txt', 'a')
 
+    @staticmethod
+    def deal_request(filename, url, e):
+        req_err_content = utils.request_faile(url, e)
+        filename.write(str(req_err_content) + '\n')
+
+    @staticmethod
+    def deal_json(filename, url, e, code):
+        json_err_content = utils.json_faile(url, e, code)
+        filename.write(str(json_err_content))
+
+    @staticmethod
+    def deal_lack(filename, url, lengths, code):
+        content_lack = utils.response_faile(url, lengths, code)
+        filename.write(str(content_lack))
 
     # 1.2.配置参数接口
     def url_config(self, url):
         # 防止请求时程序报错崩溃
         try:
-            response = requests.get(self.domain+url)
+            response = requests.get(self.domain + url)
         except RequestException as e:
             # 请求错误信息
-            req_err_content = utils.request_faile(url, e)
-            self.request_err_file.write(str(req_err_content)+'\n')
+            self.deal_request(self.request_err_file, url, e)
         else:
             # 防止转换json报错
             try:
                 r_dict = response.json()
             except ValueError as e:
                 # json转换错误信息
-                json_err_content = utils.json_faile(url, e, response.status_code)
-                self.json_err_file.write(str(json_err_content))
+                self.deal_json(self.json_err_file, url, e, response.status_code)
             else:
                 version = r_dict.get('data').get('updateInfo').get('version')
                 file_name = r_dict.get('data').get('updateInfo').get('file')
@@ -62,14 +74,24 @@ class TuBo_GetAPI(object):
                 if len(compare_content) != 0:
                     self.response_err_file.write(str(compare_content)+'\n')
                 # data长度比较
-                if len(r_dict.get('data')) != compare_contants.CONFIG_DATA_LENGTH:
+                if len(r_dict.get('data').get('updateInfo')) != compare_contants.CONFIG_DATA_LENGTH:
                     # 缺少响应数据信息
-                    content_lack = utils.response_faile(url, len(r_dict.get('data')), response.status_code)
-                    self.lack_response_err_file.write(str(content_lack))
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data').get('updateInfo')), response.status_code)
 
-    # 购买页
-    def url_by(self, url):
-        pass
+    # 升级更新接口
+    def check_update(self, url):
+        try:
+            response = requests.get(self.domain + url)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                pass
+
 
 
 
