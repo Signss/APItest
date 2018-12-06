@@ -53,16 +53,6 @@ class TuBo_GetAPI(object):
             else:
                 version = r_dict.get('data').get('updateInfo').get('version')
                 file_name = r_dict.get('data').get('updateInfo').get('file')
-                # 构造数据
-                content = {
-                    'url': url,
-                    'pass': True,
-                    '状态码': response.status_code,
-                    '版本号': r_dict.get('data').get('updateInfo').get('version'),
-                    '文件名': r_dict.get('data').get('updateInfo').get('file'),
-
-                }
-                self.file.write(str(content)+'\n')
                 # 数据比较
                 compare_content = {}
                 if version != compare_contants.VERSION:
@@ -79,6 +69,17 @@ class TuBo_GetAPI(object):
                 if len(r_dict.get('data').get('updateInfo')) != compare_contants.CONFIG_DATA_LENGTH:
                     # 缺少响应数据信息
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data').get('updateInfo')), response.status_code)
+                else:
+                    # 构造数据
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        '版本号': r_dict.get('data').get('updateInfo').get('version'),
+                        '文件名': r_dict.get('data').get('updateInfo').get('file'),
+
+                    }
+                    self.file.write(str(content) + '\n')
 
     # 升级更新接口
     def check_update(self, url):
@@ -93,7 +94,14 @@ class TuBo_GetAPI(object):
                 self.deal_json(self.json_err_file, url, e, response.status_code)
             else:
                 version = r_dict.get('version')
-
+                file_name = r_dict.get('file')
+                content = {
+                    'url': url,
+                    'pass': True,
+                    '状态码': response.status_code,
+                    'version': r_dict.get('version'),
+                    'filename': r_dict.get('file')
+                }
 
 
 
