@@ -18,7 +18,7 @@ URL_BY = '/buy'
 # 全国城市列表
 URL_CITY = '/city'
 # 又拍云上传签名
-URL_UPLOADSIGN = 'uploadsign'
+URL_UPLOADSIGN = '/uploadsign'
 # 计费商品列表
 URL_GOODS = '/goods'
 # 活动列表

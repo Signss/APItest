@@ -178,18 +178,99 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
+    # 又拍云上传签名
+    def uploadsign(self, url):
+        try:
+            payload = {
+                'type': 1,
+                'extension': '.txt',
+                # 'sn': '154328393018212518'
+            }
+            response = requests.get(self.domain + url, params=payload)
+            print(response.json())
+            print(response.url)
+        except RequestException as e:
+            print(e)
+
+
+    # 计费商品
+    def goods(self, url):
+        try:
+            response = requests.get(self.domain + url)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                img_price = r_dict.get('data')[0].get('price')
+                water_mark_price = r_dict.get('data')[1].get('price')
+                water_zmark_price = r_dict.get('data')[2].get('price')
+                phone_price = r_dict.get('data')[3].get('price')
+                psd_price = r_dict.get('data')[4].get('price')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.GOODS_Z_CODE:
+                    compare_content['code'] = code
+                elif img_price != compare_contants.IMG_PRICE:
+                    compare_content['img_price'] = img_price
+                elif water_mark_price != compare_contants.WATER_MARK_PRICE:
+                    compare_content['water_mark_price'] = water_mark_price
+                elif water_zmark_price != compare_contants.WATER_Z_MARK_PRICE:
+                    compare_content['water_zmark_price'] = water_zmark_price
+                elif phone_price != compare_contants.PHONE_PRICE:
+                    compare_content['phone_price'] = phone_price
+                elif psd_price != compare_contants.PSD_PRICE:
+                    compare_content['psd_price'] = psd_price
+                if len(r_dict.get('data')) < compare_contants.GOODS_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data' : r_dict.get('data')
+                    }
+                    self.file.write(str(content))
+
+
+    # 活动列表
+    def activity(self, url):
+        try:
+            response = requests.get(self.domain + 'url')
+            print(response.json())
+            print(response.url)
+        except RequestException as e:
+            print(e)
 
     # 启动函数
     def run(self):
         # 配置参数接口
-        self.url_config(contants.URL_CONFIG)
-        # 升级更新接口
-        self.check_update(contants.URL_CHECKUPDATE)
-        # 购买页接口
-        self.buy(contants.URL_BY)
-        # 城市列表接口
-        self.city(contants.URL_CITY)
+        # self.url_config(contants.URL_CONFIG)
+        # # 升级更新接口
+        # self.check_update(contants.URL_CHECKUPDATE)
+        # # 购买页接口
+        # self.buy(contants.URL_BY)
+        # # 城市列表接口
+        # self.city(contants.URL_CITY)
+        # self.uploadsign(contants.URL_UPLOADSIGN)
+        # self.activity(contants.URL_ACTIVITY)
+        self.goods(contants.URL_GOODS)
 
+
+        # 关闭文件
+        # 请求失败保存文件
+        self.request_err_file.close()
+        # json转换失败保存文件
+        self.json_err_file.close()
+        # 响应数据字段错误保存文件
+        self.response_err_file.close()
+        # 响应数据字段缺少保存文件
+        self.lack_response_err_file.close()
 
 
 
