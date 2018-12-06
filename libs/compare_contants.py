@@ -12,6 +12,8 @@ UP_DATA_LENGTH = 4
 # 购买页
 BUY_Z_CODE = 1001
 BUY_DATA_LENGTH = 5
+JD = 'http://www.jd.comxxx'
+TB = 'http://www.taobao.com'
 
 # 全国城市列表
 CITY_Z_CODE = 1001

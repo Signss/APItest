@@ -28,3 +28,11 @@ def response_faile(url, lg, code):
         'status': code
     }
     return content_lack
+
+# 响应数据比较
+# def compare_dict(filename ,c_dict,url, code, ptest):
+#     c_dict['url'] = url
+#     c_dict['状态码'] = code
+#     c_dict['pass'] = False
+#     if len(c_dict) > 3:
+#         filename.write(str(c_dict) + '\n')
