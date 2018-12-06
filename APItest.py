@@ -56,11 +56,11 @@ class TuBo_GetAPI(object):
                 # 构造数据
                 content = {
                     'url': url,
+                    'pass': True,
                     '状态码': response.status_code,
                     '版本号': r_dict.get('data').get('updateInfo').get('version'),
                     '文件名': r_dict.get('data').get('updateInfo').get('file'),
-                    '版本描述': r_dict.get('data').get('updateInfo').get('description'),
-                    '是否强制更新': r_dict.get('data').get('updateInfo').get('force')
+
                 }
                 self.file.write(str(content)+'\n')
                 # 数据比较
@@ -69,9 +69,11 @@ class TuBo_GetAPI(object):
                     compare_content['版本号错误'] = version
                 elif file_name != compare_contants.FILE_NAME:
                     compare_content['文件名错误'] = file_name
+                else:
                     compare_content['url'] = url
                     compare_content['status'] = response.status_code
-                if len(compare_content) != 0:
+                    compare_content['pass'] = False
+                if len(compare_content) > 3:
                     self.response_err_file.write(str(compare_content)+'\n')
                 # data长度比较
                 if len(r_dict.get('data').get('updateInfo')) != compare_contants.CONFIG_DATA_LENGTH:
@@ -90,7 +92,8 @@ class TuBo_GetAPI(object):
             except ValueError as e:
                 self.deal_json(self.json_err_file, url, e, response.status_code)
             else:
-                pass
+                version = r_dict.get('version')
+
 
 
 

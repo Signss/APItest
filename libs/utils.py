@@ -2,6 +2,7 @@
 def request_faile(url, err):
     req_err_content = {
         'url': url,
+        'pass': False,
         '请求状态': '请求失败',
         '配置参数接口': err,
     }
@@ -11,6 +12,7 @@ def request_faile(url, err):
 def json_faile(url, err, code):
     json_err_content = {
         'url': url,
+        'pass': False,
         '问题': 'json转换错误',
         'error': err,
         'status_code': code
@@ -21,6 +23,7 @@ def json_faile(url, err, code):
 def response_faile(url, lg, code):
     content_lack = {
         'url': url,
+        'pass': False,
         '响应缺少': lg,
         'status': code
     }
