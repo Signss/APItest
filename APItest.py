@@ -28,12 +28,12 @@ class TuBo_GetAPI(object):
     @staticmethod
     def deal_json(filename, url, e, code):
         json_err_content = utils.json_faile(url, e, code)
-        filename.write(str(json_err_content))
+        filename.write(str(json_err_content) + '\n')
 
     @staticmethod
     def deal_lack(filename, url, lengths, code):
         content_lack = utils.response_faile(url, lengths, code)
-        filename.write(str(content_lack))
+        filename.write(str(content_lack) + '\n')
 
     # 配置参数接口
     def url_config(self, url):
@@ -62,11 +62,11 @@ class TuBo_GetAPI(object):
                     compare_content['文件名错误'] = file_name
 
                 # data长度比较
-                if len(r_dict.get('data').get('updateInfo')) != compare_contants.CONFIG_DATA_LENGTH:
+                if len(r_dict.get('data').get('updateInfo')) < compare_contants.CONFIG_DATA_LENGTH:
                     # 缺少响应数据信息
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data').get('updateInfo')), response.status_code)
-                elif len(compare_content) > 3:
-                    self.response_err_file.write(str(compare_content))
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
                 else:
                     # 构造数据
                     content = {
@@ -100,10 +100,10 @@ class TuBo_GetAPI(object):
                 elif file_name != compare_contants.FILE_ADDR:
                     compare_content['升级文件名错误'] = file_name
 
-                if len(r_dict) != compare_contants.UP_DATA_LENGTH:
+                if len(r_dict) < compare_contants.UP_DATA_LENGTH:
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
-                elif len(compare_content) > 3:
-                    self.response_err_file.write(str(compare_content))
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
                 else:
                     content = {
                         'url': url,
@@ -136,10 +136,10 @@ class TuBo_GetAPI(object):
                 elif tb_url != compare_contants.TB:
                     compare_content['tb_url'] = tb_url
 
-                if len(r_dict.get('data')) != compare_contants.BUY_DATA_LENGTH:
+                if len(r_dict.get('data')) < compare_contants.BUY_DATA_LENGTH:
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
-                elif len(compare_content) > 3:
-                    self.response_err_file.write(str(compare_content))
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
                 else:
                     content = {
                         'url': url,
@@ -147,7 +147,37 @@ class TuBo_GetAPI(object):
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
-                    self.file.write(str(content))
+                    self.file.write(str(content) + '\n')
+
+    # 城市列表
+    def city(self, url):
+        try:
+            response = requests.get(self.domain + url)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                status_code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if status_code != compare_contants.CITY_Z_CODE:
+                    compare_content['code'] = status_code
+                if len(r_dict.get('data')) < compare_contants.CITY_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
+
 
     # 启动函数
     def run(self):
@@ -157,6 +187,8 @@ class TuBo_GetAPI(object):
         self.check_update(contants.URL_CHECKUPDATE)
         # 购买页接口
         self.buy(contants.URL_BY)
+        # 城市列表接口
+        self.city(contants.URL_CITY)
 
 
 
