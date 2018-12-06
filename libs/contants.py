@@ -1,13 +1,17 @@
-# 接口域名
+# 测试环境接口域名
 DOMAIN = 'https://dapi.livepic.com.cn'
-# Authorization
-HEAD = {'Authorization': 'ddee346ff324724023ac6c3496e1b2675897d7ea937ef43179d419539c21c67b5bfca4c92ce86'}
+# 用户手机号
+MOBILE = '16601297365'
+# 测试环境固定验证码数值
+FIX_CODE = '123456'
 # 1.1.公共参数
 COMMON_PARA = {
 "Authorization": "Bearer b6a9817f4d9ec7ff676f2e0159ddda20fc48502e8b903c1c8b742d0b91d1cd755bee32721df97",
 "AppVersion": "1.0.1",
 "UserId": 53
 }
+# token前缀
+TOKEN_PREFIX = 'Bearer '
 # 方法为get请求的接口
 # 配置参数接口接口：GET /app/init请求参数：无
 URL_CONFIG = '/app/init'
@@ -67,3 +71,11 @@ URL_DEVICE_ALBUM = '/device/album'
 URL_INVITE_CODE = '/invite-code'
 # 已结束的直播列表（在该直播下有身份）
 URL_ACTIVITY_END = '/activity/end/list'
+
+# 方法为post请求的接口
+# 手机验证码接口
+URL_CODE = '/code'
+# 登陆接口
+URL_LOGIN = '/user/authorization'
+# 图片上传成功回调接口
+URL_UPLOAD_CALLBACK = '/app/upload/callback'
