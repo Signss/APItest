@@ -6,6 +6,7 @@ from libs import utils, contants, compare_contants
 # get请求接口测试类
 class TuBo_GetAPI(object):
 
+
     # 初始化信息
     def __init__(self, domain):
         self.domain = domain
