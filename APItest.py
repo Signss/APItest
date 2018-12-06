@@ -35,7 +35,7 @@ class TuBo_GetAPI(object):
         content_lack = utils.response_faile(url, lengths, code)
         filename.write(str(content_lack))
 
-    # 1.2.配置参数接口
+    # 配置参数接口
     def url_config(self, url):
         # 防止请求时程序报错崩溃
         try:
@@ -95,19 +95,40 @@ class TuBo_GetAPI(object):
             else:
                 version = r_dict.get('version')
                 file_name = r_dict.get('file')
-                content = {
-                    'url': url,
-                    'pass': True,
-                    '状态码': response.status_code,
-                    'version': r_dict.get('version'),
-                    'filename': r_dict.get('file')
-                }
+                compare_content = {}
+                if version != compare_contants.VERSION_UP:
+                    compare_content['升级版本号错误'] = version
+                elif file_name != compare_contants.FILE_ADDR:
+                    compare_content['升级文件名错误'] = file_name
+                else:
+                    compare_content['url'] = url
+                    compare_content['status'] = response.status_code
+                    compare_content['pass'] = False
+                if len(compare_content) > 3:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                if len(r_dict) != compare_contants.UP_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'version': r_dict.get('version'),
+                        'filename': r_dict.get('file')
+                    }
+                    self.file.write(str(content) + '\n')
 
+    # 启动函数
+    def run(self):
+        # 配置参数接口
+        self.url_config(contants.URL_CONFIG)
+        # 升级更新接口
+        self.check_update(contants.URL_CHECKUPDATE)
 
 
 
 
 if __name__ == '__main__':
     tuboAPI = TuBo_GetAPI(contants.DOMAIN)
-    tuboAPI.url_config(contants.URL_CONFIG)
+    tuboAPI.run()
 

@@ -6,7 +6,8 @@ CONFIG_DATA_LENGTH = 4
 # 升级更新接口
 VERSION_UP = '1.1.1'
 FILE_ADDR = 'https://imtt.dd.qq.com/16891/F14AE2A255D126C3D3699AE14A856990.apk'
-FORCE = 'true'
+UP_DATA_LENGTH = 4
+# FORCE = 'true'
 
 # 购买页
 BUY_Z_CODE = 1001
