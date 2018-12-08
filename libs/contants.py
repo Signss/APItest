@@ -25,6 +25,8 @@ URL_CITY = '/city'
 URL_UPLOADSIGN = '/uploadsign'
 # 计费商品列表
 URL_GOODS = '/goods'
+
+
 # 活动列表
 URL_ACTIVITY = '/activity'
 # 资料页

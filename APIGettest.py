@@ -145,7 +145,7 @@ class TuBo_GetAPI(object):
                 jd_url = r_dict.get('data').get('jd')
                 tb_url = r_dict.get('data').get('tb')
                 compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
-                if status_code != compare_contants.BUY_Z_CODE:
+                if status_code != compare_contants.COMMON_CODE:
                     compare_content['code'] = status_code
                 elif jd_url != compare_contants.JD:
                     compare_content['jd_url'] = jd_url
@@ -179,7 +179,7 @@ class TuBo_GetAPI(object):
             else:
                 status_code = r_dict.get('code')
                 compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
-                if status_code != compare_contants.CITY_Z_CODE:
+                if status_code != compare_contants.COMMON_CODE:
                     compare_content['code'] = status_code
                 if len(r_dict.get('data')) < compare_contants.CITY_DATA_LENGTH:
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
@@ -215,7 +215,7 @@ class TuBo_GetAPI(object):
             else:
                 code = r_dict.get('code')
                 compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
-                if code != compare_contants.SIGN_Z_CODE:
+                if code != compare_contants.COMMON_CODE:
                     compare_content['code'] = code
 
                 if len(r_dict.get('data')) < compare_contants.SIGN_DATA_LENGTH:
@@ -230,10 +230,6 @@ class TuBo_GetAPI(object):
                         'data': r_dict.get('data')
                     }
                     self.file.write(str(content) + '\n')
-
-
-
-
 
     # 计费商品
     def goods(self, url):
@@ -254,7 +250,7 @@ class TuBo_GetAPI(object):
                 phone_price = r_dict.get('data')[3].get('price')
                 psd_price = r_dict.get('data')[4].get('price')
                 compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
-                if code != compare_contants.GOODS_Z_CODE:
+                if code != compare_contants.COMMON_CODE:
                     compare_content['code'] = code
                 elif img_price != compare_contants.IMG_PRICE:
                     compare_content['img_price'] = img_price
@@ -277,32 +273,61 @@ class TuBo_GetAPI(object):
                         '状态码': response.status_code,
                         'data' : r_dict.get('data')
                     }
-                    self.file.write(str(content))
+                    self.file.write(str(content)+'\n')
 
 
     # 活动列表
     def activity(self, url):
         try:
-            response = requests.get(self.domain + 'url')
-            print(response.json())
-            print(response.url)
+            payload = {'type': 0}
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, params=payload, headers=headers)
         except RequestException as e:
-            print(e)
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                if len(r_dict.get('data')[0]) < compare_contants.ACTIVITY_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
+
+
 
     # 启动函数
     def run(self):
         # 配置参数接口
         # self.url_config(contants.URL_CONFIG)
-        # # 升级更新接口
+        # 升级更新接口
         # self.check_update(contants.URL_CHECKUPDATE)
-        # # 购买页接口
+        # 购买页接口
         # self.buy(contants.URL_BY)
-        # # 城市列表接口
+        # 城市列表接口
         # self.city(contants.URL_CITY)
+        # 又拍云上传签名
         # self.uploadsign(contants.URL_UPLOADSIGN)
-        # self.activity(contants.URL_ACTIVITY)
+        # 活动列表
+        self.activity(contants.URL_ACTIVITY)
+        # 计费商品列表
         # self.goods(contants.URL_GOODS)
-        self.uploadsign(contants.URL_UPLOADSIGN)
+
 
 
         # 关闭文件
