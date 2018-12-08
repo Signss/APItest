@@ -22,6 +22,11 @@ TB = 'http://www.taobao.com/'
 CITY_Z_CODE = 1001
 CITY_DATA_LENGTH = 22
 
+# 又拍云上传签名
+SIGN_Z_CODE = 1001
+SIGN_DATA_LENGTH = 3
+
+
 # 计费商品列表
 GOODS_Z_CODE = 1001
 IMG_PRICE = 10
