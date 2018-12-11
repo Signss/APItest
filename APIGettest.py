@@ -443,11 +443,42 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
-
-
-
-
-
+    # 用户已上传图的图片列表1
+    def user_picture(self, url):
+        try:
+            payload = {'id': compare_contants.USER_PICTURE_ID}
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, params=payload, headers=headers)
+            print(response.json().get('data'))
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                count = r_dict.get('data').get('release_picture_count')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                elif count != compare_contants.USER_PICTURE_COUNT:
+                    compare_content['pic_count'] = count
+                if len(r_dict.get('data')) < compare_contants.USERPICTURE_DATA_LENTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
 
 
@@ -475,8 +506,9 @@ class TuBo_GetAPI(object):
         # 直播原相册
         # self.picture_album(contants.URL_PIC_ALBUM)
         # 直播详情
-        self.picture_detail(contants.URL_PIC_DETAIL)
-
+        # self.picture_detail(contants.URL_PIC_DETAIL)
+        # 用户已上传的图片列表
+        self.user_picture(contants.URL_USER_PIC)
 
         # 关闭文件
         # 请求失败保存文件
