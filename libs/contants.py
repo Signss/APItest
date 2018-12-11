@@ -39,7 +39,7 @@ URL_PIC_ALBUM = '/picture/album'
 URL_PIC_DETAIL = '/picture/detail'
 # 用户已上传图片列表
 URL_USER_PIC = '/user/picture'
-# 导播管理节目
+# 导播管理界面
 URL_EDITOR = '/editor/list'
 # 编辑室列表
 URL_EDIT = '/edit/list'
