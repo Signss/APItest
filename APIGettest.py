@@ -546,6 +546,37 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
+    # 直播预约摄影师列表
+    def reserve_list(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                if len(r_dict.get('data')) < compare_contants.RESERVELIST_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
 
 
@@ -584,8 +615,9 @@ class TuBo_GetAPI(object):
         # 导播管理界面
         # self.editor_list(contants.URL_EDITOR)
         # 编辑室列表
-        self.edit_list(contants.URL_EDIT)
-
+        # self.edit_list(contants.URL_EDIT)
+        # 直播预约摄影师列表
+        self.reserve_list(contants.URL_RESERVE)
 
 
         # 关闭文件
