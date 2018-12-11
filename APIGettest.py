@@ -775,6 +775,42 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
+    # 消息列表
+    def user_message(self, url):
+        try:
+            payload = {
+                'page': compare_contants.USER_MESSAGE_PAGE,
+                'per_num': compare_contants.USER_MESSAGE_PERNUM
+                }
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, params=payload, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict.get('data')) < compare_contants.MESSAGE_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
 
     # 启动函数
@@ -820,8 +856,9 @@ class TuBo_GetAPI(object):
         # 我的关注列表
         # self.user_subscribe(contants.URL_USER_SUB)
         # 分享页加强版1
-        self.share(contants.URL_SHARE)
-
+        # self.share(contants.URL_SHARE)
+        # 消息列表
+        self.user_message(contants.URL_MESSAGE)
 
 
 
