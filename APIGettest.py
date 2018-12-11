@@ -617,7 +617,6 @@ class TuBo_GetAPI(object):
                 'Authorization': self.Authorization
             }
             response = requests.get(self.domain + url, headers=headers)
-            print(len(response.json().get('data')))
         except RequestException as e:
             self.deal_request(self.request_err_file, url, e)
         else:
@@ -643,8 +642,71 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
+    # 我预约别人的2
+    def user_mybooking(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                if len(r_dict.get('data')) < compare_contants.USERMYBOOK_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
-
+    # 别人预约我的2
+    def user_subscribe(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, headers=headers)
+            print(len(response.json().get('data')))
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                if len(r_dict.get('data')) < compare_contants.USERMYCUST_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')),
+                                   response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
     # 启动函数
     def run(self):
@@ -681,7 +743,11 @@ class TuBo_GetAPI(object):
         # 直播预sn
         # self.prep(contants.URL_PREP)
         # 分类列表
-        self.category(contants.URL_CATEGORY)
+        # self.category(contants.URL_CATEGORY)
+        # 我预约别人的
+        # self.user_mybooking(contants.URL_USER_MY)
+        # 别人预约我的
+        self.user_subscribe(contants.URL_MYCUSTOMER)
 
 
         # 关闭文件
