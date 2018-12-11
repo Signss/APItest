@@ -63,7 +63,7 @@ URL_SHARE = '/share'
 URL_DEVICE = '/device/verify'
 # 消息列表
 URL_MESSAGE = '/user/message'
-# 个人设置信息
+# 个人设备信息
 URL_USER_DEVICE = '/user/device'
 # banner
 URL_BANNER = '/banner'
