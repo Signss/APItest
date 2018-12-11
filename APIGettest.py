@@ -845,13 +845,41 @@ class TuBo_GetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
+    # 验证邀请码
+    def invite_code(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
 
-
-
-
-
-
-
+                code = r_dict.get('code')
+                data = r_dict.get('data')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                elif data != compare_contants.INVITE_CODE_DATA:
+                    compare_content['data'] = data
+                if len(r_dict) < compare_contants.INVITECODE_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
 
     # 启动函数
     def run(self):
@@ -900,8 +928,9 @@ class TuBo_GetAPI(object):
         # 消息列表
         # self.user_message(contants.URL_MESSAGE)
         # banner
-        self.banner(contants.URL_BANNER)
-
+        # self.banner(contants.URL_BANNER)
+        # 验证邀请码
+        self.invite_code(contants.URL_INVITE_CODE)
 
 
 
