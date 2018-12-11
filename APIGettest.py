@@ -396,7 +396,7 @@ class TuBo_GetAPI(object):
                 if code != compare_contants.COMMON_CODE:
                     compare_content['code'] = code
 
-                if len(r_dict.get('data')) < compare_contants.CAMERIST_DATA_LENGTH:
+                if len(r_dict.get('data')) < compare_contants.PICTUREALBUM_DATA_LENGTH:
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
                 elif len(compare_content) > compare_contants.LACK_NUM:
                     self.response_err_file.write(str(compare_content) + '\n')
@@ -408,6 +408,44 @@ class TuBo_GetAPI(object):
                         'data': r_dict.get('data')
                     }
                     self.file.write(str(content) + '\n')
+
+    # 直播详情1
+    def picture_detail(self, url):
+        try:
+            payload = {'id': compare_contants.PICTURE_DETAIL_ID}
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.get(self.domain + url, params=payload, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict.get('data')) < compare_contants.PICTUREDETAIL_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    content = {
+                        'url': url,
+                        'pass': True,
+                        '状态码': response.status_code,
+                        'data': r_dict.get('data')
+                    }
+                    self.file.write(str(content) + '\n')
+
+
+
+
 
 
 
@@ -435,8 +473,9 @@ class TuBo_GetAPI(object):
         # 摄影师管理
         # self.camerist(contants.URL_CAMERIST)
         # 直播原相册
-        self.picture_album(contants.URL_PIC_ALBUM)
-
+        # self.picture_album(contants.URL_PIC_ALBUM)
+        # 直播详情
+        self.picture_detail(contants.URL_PIC_DETAIL)
 
 
         # 关闭文件
