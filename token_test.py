@@ -22,9 +22,6 @@ headers = {'Authorization': authon}
 upsign = requests.get(url_uploadsign, params=uploadsigin_data, headers=headers)
 print(upsign.json())
 
-a = '123456'
-b = '{"url":"/buy","状态码":200,"pass":"True","banner":[]}'
-
-
-print(json.loads(b))
-print(type(json.loads(b)))
+a = [1,2,3,4,5]
+for b in a:
+    print(a.index(b))

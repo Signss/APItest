@@ -37,14 +37,14 @@ def response_faile(url, lg, code):
     return content_lack
 
 # 对保存文件结果处理
-def deal_err_file(filename):
+def deal_err_file(filename, type):
     url_lsit = []
     err_json = []
-    with open('json_err_file.txt', 'r') as f:
+    with open(filename, 'r') as f:
         data = f.readline()
         if not data:
             content_j = {
-                'type': 'json转换',
+                'type': type,
                 'test_status': '通过'
             }
             return content_j
