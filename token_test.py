@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 url_code = 'https://dapi.livepic.com.cn/code'
 payload = {'mobile':'16601297365'}
@@ -21,3 +21,10 @@ uploadsigin_data = {'type':1, 'extension': 'png'}
 headers = {'Authorization': authon}
 upsign = requests.get(url_uploadsign, params=uploadsigin_data, headers=headers)
 print(upsign.json())
+
+a = '123456'
+b = '{"url":"/buy","状态码":200,"pass":"True","banner":[]}'
+
+
+print(json.loads(b))
+print(type(json.loads(b)))

@@ -3,7 +3,7 @@ from requests.exceptions import RequestException
 from libs import utils, contants, compare_contants
 
 # get请求接口测试类
-class TuBo_GetAPI(object):
+class TuBoGetAPI(object):
 
     # 初始化信息
     def __init__(self, domain):
@@ -85,7 +85,7 @@ class TuBo_GetAPI(object):
                     # 构造数据
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         '版本号': r_dict.get('data').get('updateInfo').get('version'),
                         '文件名': r_dict.get('data').get('updateInfo').get('file'),
@@ -121,7 +121,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'version': r_dict.get('version'),
                         'filename': r_dict.get('file')
@@ -157,7 +157,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -186,7 +186,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -223,7 +223,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -267,7 +267,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data' : r_dict.get('data')
                     }
@@ -301,7 +301,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -335,7 +335,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -369,7 +369,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -403,7 +403,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -437,7 +437,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -451,7 +451,6 @@ class TuBo_GetAPI(object):
                 'Authorization': self.Authorization
             }
             response = requests.get(self.domain + url, params=payload, headers=headers)
-            print(response.json().get('data'))
         except RequestException as e:
             self.deal_request(self.request_err_file, url, e)
         else:
@@ -474,7 +473,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -507,7 +506,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -540,7 +539,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -572,7 +571,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -604,7 +603,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -636,7 +635,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -668,7 +667,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -701,7 +700,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -735,7 +734,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -769,7 +768,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -806,7 +805,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -839,7 +838,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -875,7 +874,7 @@ class TuBo_GetAPI(object):
                 else:
                     content = {
                         'url': url,
-                        'pass': True,
+                        'pass': 'True',
                         '状态码': response.status_code,
                         'data': r_dict.get('data')
                     }
@@ -884,51 +883,51 @@ class TuBo_GetAPI(object):
     # 启动函数
     def run(self):
         # 配置参数接口
-        # self.url_config(contants.URL_CONFIG)
+        self.url_config(contants.URL_CONFIG)
         # 升级更新接口
-        # self.check_update(contants.URL_CHECKUPDATE)
+        self.check_update(contants.URL_CHECKUPDATE)
         # 购买页接口
-        # self.buy(contants.URL_BY)
+        self.buy(contants.URL_BY)
         # 城市列表接口
-        # self.city(contants.URL_CITY)
+        self.city(contants.URL_CITY)
         # 又拍云上传签名
-        # self.uploadsign(contants.URL_UPLOADSIGN)
+        self.uploadsign(contants.URL_UPLOADSIGN)
         # 活动列表
-        # self.activity(contants.URL_ACTIVITY)
+        self.activity(contants.URL_ACTIVITY)
         # 计费商品列表
-        # self.goods(contants.URL_GOODS)
+        self.goods(contants.URL_GOODS)
         # 活动资料页
-        # self.activity_data(contants.URL_ACTIVITY_DATA)
+        self.activity_data(contants.URL_ACTIVITY_DATA)
         # 摄影师管理
-        # self.camerist(contants.URL_CAMERIST)
+        self.camerist(contants.URL_CAMERIST)
         # 直播原相册
-        # self.picture_album(contants.URL_PIC_ALBUM)
+        self.picture_album(contants.URL_PIC_ALBUM)
         # 直播详情
-        # self.picture_detail(contants.URL_PIC_DETAIL)
+        self.picture_detail(contants.URL_PIC_DETAIL)
         # 用户已上传的图片列表
-        # self.user_picture(contants.URL_USER_PIC)
+        self.user_picture(contants.URL_USER_PIC)
         # 导播管理界面
-        # self.editor_list(contants.URL_EDITOR)
+        self.editor_list(contants.URL_EDITOR)
         # 编辑室列表
-        # self.edit_list(contants.URL_EDIT)
+        self.edit_list(contants.URL_EDIT)
         # 直播预约摄影师列表
-        # self.reserve_list(contants.URL_RESERVE)
+        self.reserve_list(contants.URL_RESERVE)
         # 直播预sn
-        # self.prep(contants.URL_PREP)
+        self.prep(contants.URL_PREP)
         # 分类列表
-        # self.category(contants.URL_CATEGORY)
+        self.category(contants.URL_CATEGORY)
         # 我预约别人的
-        # self.user_mybooking(contants.URL_USER_MY)
+        self.user_mybooking(contants.URL_USER_MY)
         # 别人预约我的
-        # self.user_mycust(contants.URL_MYCUSTOMER)
+        self.user_mycust(contants.URL_MYCUSTOMER)
         # 我的关注列表
-        # self.user_subscribe(contants.URL_USER_SUB)
+        self.user_subscribe(contants.URL_USER_SUB)
         # 分享页加强版1
-        # self.share(contants.URL_SHARE)
+        self.share(contants.URL_SHARE)
         # 消息列表
-        # self.user_message(contants.URL_MESSAGE)
+        self.user_message(contants.URL_MESSAGE)
         # banner
-        # self.banner(contants.URL_BANNER)
+        self.banner(contants.URL_BANNER)
         # 验证邀请码
         self.invite_code(contants.URL_INVITE_CODE)
 
@@ -947,8 +946,6 @@ class TuBo_GetAPI(object):
 
 
 
-if __name__ == '__main__':
-    tuboAPI = TuBo_GetAPI(contants.DOMAIN)
-    tuboAPI.run()
+
 
 
