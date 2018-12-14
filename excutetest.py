@@ -1,4 +1,4 @@
-import time, os
+import os
 from libs import contants, utils
 from APIGettest import TuBoGetAPI
 
@@ -8,10 +8,10 @@ from APIGettest import TuBoGetAPI
 email_str = '<h1>图播接口测试结果</h1><br/>'
 
 
-
+# 处理测试结果文件
 def deal_get():
-    # get_test = TuBoGetAPI(contants.DOMAIN)
-    # get_test.run()
+    get_test = TuBoGetAPI(contants.DOMAIN)
+    get_test.run()
     send_list = []
     json_result = utils.deal_err_file('json_err_file.txt',  'json转换')
     send_list.append(json_result)
@@ -52,7 +52,10 @@ def main():
     pass_str = email_content(send_list)
     content = email_str + pass_str
     utils.send_email(content)
-
+    os.remove('json_err_file.txt')
+    os.remove('request_err_result.txt')
+    os.remove('response_err_file.txt')
+    os.remove('lack_response_err_file.txt')
 
 
 if __name__ == '__main__':

@@ -79,5 +79,17 @@ URL_ACTIVITY_END = '/activity/end/list'
 URL_CODE = '/code'
 # 登陆接口
 URL_LOGIN = '/user/authorization'
-# 图片上传成功回调接口
-URL_UPLOAD_CALLBACK = '/app/upload/callback'
+
+# 首页布局接口
+# 首页布局接口 授权信息Header+Token, 参数表单提交
+URL_HOMEPAGE = '/app/content/homepage'
+HOME_PAGE = 1
+HOME_NUM = 5
+# 设备页布局接口 授权信息Header+Token, 参数无
+URL_DEVICEDETAIL = '/app/content/deviceDetail'
+
+# 个人名片页接口
+# 个人名片页浏览接口 授权信息Header+Token, 参数无
+URL_VISITCARD = '/app/content/visitingCard'
+# 个人名片页编辑接口 授权信息Header+Token, 参数无
+URL_EDITVISCARD = '/app/content/editVisitingCard'
