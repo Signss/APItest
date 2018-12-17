@@ -1,3 +1,5 @@
+#coding:utf-8
+# 测试文件
 import requests, json
 
 url_code = 'https://dapi.livepic.com.cn/code'

@@ -36,6 +36,18 @@ def response_faile(url, lg, code):
     }
     return content_lack
 
+# 保存正确数据处理函数
+
+def correct_response(url, response, r_dict, obj):
+    content = {
+        'url': url,
+        'pass': 'True',
+        '状态码': response.status_code,
+        'data': r_dict.get('data')
+    }
+    obj.write(str(content) + '\n')
+
+
 # 对保存文件结果处理
 def deal_err_file(filename, type):
     url_lsit = []

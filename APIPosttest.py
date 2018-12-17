@@ -58,8 +58,6 @@ class TuBoPostAPI(object):
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
             response = requests.post(self.domain + url, data=payload, headers=headers)
-            print(response.json().get('data'))
-            print(len(response.json().get('data').get('content')))
         except RequestException as e:
             self.deal_request(self.request_err_file, url, e)
         else:
@@ -72,13 +70,66 @@ class TuBoPostAPI(object):
                 data_length = len(r_dict.get('data'))
                 content_length = len(r_dict.get('data').get('content'))
                 compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
-                pass
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+                elif data_length != compare_contants.HOME_DATA_LENGTH:
+                    compare_content['data_length'] = data_length
+                elif content_length != compare_contants.HOME_CONTENT_LENGTH:
+                    compare_content['content_length'] = content_length
+                if content_length < compare_contants.HOME_CONTENT_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) > compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
+
+    # 设备页布局接口
+    def device_detail(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.post(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict.get('data')) < compare_contants.DEVICEDETAIL_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) < compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     # post请求运行函数
     def run(self):
         # 首页布局接口
-        self.home_page(contants.URL_HOMEPAGE)
+        # self.home_page(contants.URL_HOMEPAGE)
+        # 设备页布局接口
+        self.device_detail(contants.URL_DEVICEDETAIL)
 
 def main():
     p_tubo = TuBoPostAPI(contants.DOMAIN)
