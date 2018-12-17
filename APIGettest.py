@@ -1,4 +1,4 @@
-import requests
+import requests, threading, time
 from requests.exceptions import RequestException
 from libs import utils, contants, compare_contants
 
@@ -18,6 +18,11 @@ class TuBoGetAPI(object):
         self.response_err_file = open('response_err_file.txt', 'a')
         # 响应数据字段缺少保存文件
         self.lack_response_err_file = open('lack_response_err_file.txt', 'a')
+        # 接口任务列表
+        self.work_list = []
+        # 接口参数列表
+        self.url_list = []
+        self.offset = 0
         # 获取token
         r_dict = None
         try:
@@ -881,55 +886,151 @@ class TuBoGetAPI(object):
                     self.file.write(str(content) + '\n')
 
     # 启动函数
+    # def run(self):
+    #     # 配置参数接口
+    #     config_thread = threading.Thread(target=self.url_config, args=(contants.URL_CONFIG,))
+    #     config_thread.start()
+    #     # 升级更新接口
+    #     update_thread = threading.Thread(target=self.check_update, args=(contants.URL_CHECKUPDATE,))
+    #     update_thread.start()
+    #     # 购买页接口
+    #     buy_thread = threading.Thread(target=self.buy, args=(contants.URL_BY,))
+    #     buy_thread.start()
+    #     # 城市列表接口
+    #     city_thread = threading.Thread(target=self.city, args=(contants.URL_CITY,))
+    #     city_thread.start()
+    #     # 又拍云上传签名
+    #     uploadsign_thread = threading.Thread(target=self.uploadsign, args=(contants.URL_UPLOADSIGN,))
+    #     uploadsign_thread.start()
+    #     # 活动列表
+    #     activity_thread = threading.Thread(target=self.activity, args=(contants.URL_ACTIVITY,))
+    #     activity_thread.start()
+    #     # 计费商品列表
+    #     goods_thread = threading.Thread(target=self.goods, args=(contants.URL_GOODS,))
+    #     goods_thread.start()
+    #     # 活动资料页
+    #     data_thread = threading.Thread(target=self.activity_data, args=(contants.URL_ACTIVITY_DATA,))
+    #     data_thread.start()
+    #     # 摄影师管理
+    #     camerist_thread = threading.Thread(target=self.camerist, args=(contants.URL_CAMERIST,))
+    #     camerist_thread.start()
+    #     # 直播原相册
+    #     album_thread = threading.Thread(target=self.picture_album, args=(contants.URL_PIC_ALBUM,))
+    #     album_thread.start()
+    #     # 直播详情
+    #     detail_thread = threading.Thread(target=self.picture_detail, args=(contants.URL_PIC_DETAIL,))
+    #     detail_thread.start()
+    #     # 用户已上传的图片列表
+    #     picture_thread = threading.Thread(target=self.user_picture, args=(contants.URL_USER_PIC,))
+    #     picture_thread.start()
+    #     # 导播管理界面
+    #     editor_thread = threading.Thread(target=self.editor_list, args=(contants.URL_EDITOR,))
+    #     editor_thread.start()
+    #     # 编辑室列表
+    #     edit_thread = threading.Thread(target=self.edit_list, args=(contants.URL_EDIT,))
+    #     edit_thread.start()
+    #     # 直播预约摄影师列表
+    #     reserve_thread = threading.Thread(target=self.edit_list, args=(contants.URL_EDIT,))
+    #     reserve_thread.start()
+    #     self.reserve_list(contants.URL_RESERVE)
+    #     # 直播预sn
+    #     self.prep(contants.URL_PREP)
+    #     # 分类列表
+    #     self.category(contants.URL_CATEGORY)
+    #     # 我预约别人的
+    #     self.user_mybooking(contants.URL_USER_MY)
+    #     # 别人预约我的
+    #     self.user_mycust(contants.URL_MYCUSTOMER)
+    #     # 我的关注列表
+    #     self.user_subscribe(contants.URL_USER_SUB)
+    #     # 分享页加强版1
+    #     self.share(contants.URL_SHARE)
+    #     # 消息列表
+    #     self.user_message(contants.URL_MESSAGE)
+    #     # banner
+    #     self.banner(contants.URL_BANNER)
+    #     # 验证邀请码
+    #     self.invite_code(contants.URL_INVITE_CODE)
+    #
+    #
+    #
+    #
+    #     # 关闭文件
+    #     # 请求失败保存文件
+    #     self.request_err_file.close()
+    #     # json转换失败保存文件
+    #     self.json_err_file.close()
+    #     # 响应数据字段错误保存文件
+    #     self.response_err_file.close()
+    #     # 响应数据字段缺少保存文件
+    #     self.lack_response_err_file.close()
+
     def run(self):
         # 配置参数接口
-        self.url_config(contants.URL_CONFIG)
+        self.work_list.append(self.url_config)
+        self.url_list.append(contants.URL_CONFIG)
         # 升级更新接口
-        self.check_update(contants.URL_CHECKUPDATE)
+        self.work_list.append(self.check_update)
+        self.url_list.append(contants.URL_CHECKUPDATE)
         # 购买页接口
-        self.buy(contants.URL_BY)
+        self.work_list.append(self.buy)
+        self.url_list.append(contants.URL_BY)
         # 城市列表接口
-        self.city(contants.URL_CITY)
+        self.work_list.append(self.city)
+        self.url_list.append(contants.URL_CITY)
         # 又拍云上传签名
-        self.uploadsign(contants.URL_UPLOADSIGN)
+        self.work_list.append(self.uploadsign)
+        self.url_list.append(contants.URL_UPLOADSIGN)
         # 活动列表
-        self.activity(contants.URL_ACTIVITY)
+        self.work_list.append(self.activity)
+        self.url_list.append(contants.URL_ACTIVITY)
         # 计费商品列表
-        self.goods(contants.URL_GOODS)
+        self.work_list.append(self.goods)
+        self.url_list.append(contants.URL_GOODS)
         # 活动资料页
-        self.activity_data(contants.URL_ACTIVITY_DATA)
+        self.work_list.append(self.activity_data)
+        self.url_list.append(contants.URL_ACTIVITY_DATA)
         # 摄影师管理
-        self.camerist(contants.URL_CAMERIST)
+        self.work_list.append(self.camerist)
+        self.url_list.append(contants.URL_CAMERIST)
         # 直播原相册
-        self.picture_album(contants.URL_PIC_ALBUM)
+        self.work_list.append(self.picture_album)
+        self.url_list.append(contants.URL_PIC_ALBUM)
         # 直播详情
-        self.picture_detail(contants.URL_PIC_DETAIL)
+        self.work_list.append(self.picture_detail)
+        self.url_list.append(contants.URL_PIC_DETAIL)
         # 用户已上传的图片列表
-        self.user_picture(contants.URL_USER_PIC)
+        self.work_list.append(self.user_picture)
+        self.url_list.append(contants.URL_USER_PIC)
         # 导播管理界面
-        self.editor_list(contants.URL_EDITOR)
+        self.work_list.append(self.editor_list)
+        self.url_list.append(contants.URL_EDITOR)
         # 编辑室列表
-        self.edit_list(contants.URL_EDIT)
+        self.work_list.append(self.edit_list)
+        self.url_list.append(contants.URL_EDIT)
         # 直播预约摄影师列表
-        self.reserve_list(contants.URL_RESERVE)
+        self.work_list.append(self.reserve_list)
+        self.url_list.append(contants.URL_RESERVE)
         # 直播预sn
-        self.prep(contants.URL_PREP)
+        self.work_list.append(self.prep)
+        self.url_list.append(contants.URL_PREP)
         # 分类列表
-        self.category(contants.URL_CATEGORY)
+        self.work_list.append(self.category)
+        self.url_list.append(contants.URL_CATEGORY)
         # 我预约别人的
-        self.user_mybooking(contants.URL_USER_MY)
+        self.work_list.append(self.user_mybooking)
+        self.url_list.append(contants.URL_USER_MY)
         # 别人预约我的
-        self.user_mycust(contants.URL_MYCUSTOMER)
+        self.work_list.append(self.user_mycust)
+        self.url_list.append(contants.URL_MYCUSTOMER)
         # 我的关注列表
-        self.user_subscribe(contants.URL_USER_SUB)
+        self.work_list.append(self.user_subscribe)
+        self.url_list.append(contants.URL_USER_SUB)
         # 分享页加强版1
-        self.share(contants.URL_SHARE)
+        self.work_list.append(self.share)
+        self.url_list.append(contants.URL_SHARE)
         # 消息列表
-        self.user_message(contants.URL_MESSAGE)
-        # banner
-        self.banner(contants.URL_BANNER)
-        # 验证邀请码
-        self.invite_code(contants.URL_INVITE_CODE)
+
 
 
 
@@ -945,7 +1046,11 @@ class TuBoGetAPI(object):
         self.lack_response_err_file.close()
 
 
-
-
+if __name__ == '__main__':
+    get_test = TuBoGetAPI(contants.DOMAIN)
+    start = time.clock()
+    get_test.run()
+    end = time.clock()
+    print(end-start)
 
 

@@ -1,4 +1,4 @@
-import requests
+import requests, threading
 from requests.exceptions import RequestException
 from libs import utils, contants, compare_contants
 
@@ -18,6 +18,11 @@ class TuBoPostAPI(object):
         self.response_err_file = open('response_err_file.txt', 'a')
         # 响应数据字段缺少保存文件
         self.lack_response_err_file = open('lack_response_err_file.txt', 'a')
+        # 任务列表
+        self.work_list = []
+        # 接口参数列表
+        self.url_list = []
+        self.offset = 0
         # 获取token
         r_dict = None
         try:
@@ -83,7 +88,7 @@ class TuBoPostAPI(object):
                 else:
                     utils.correct_response(url, response, r_dict, self.file)
 
-    # 设备页布局接口
+    # 设备页布局接口1
     def device_detail(self, url):
         try:
             headers = {
@@ -110,6 +115,32 @@ class TuBoPostAPI(object):
                 else:
                     utils.correct_response(url, response, r_dict, self.file)
 
+    # 个人名片页浏览接口1
+    def visiting_card(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.post(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict.get('data')) < compare_contants.VISITCARD_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) < compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
 
 
 
@@ -127,13 +158,35 @@ class TuBoPostAPI(object):
     # post请求运行函数
     def run(self):
         # 首页布局接口
-        # self.home_page(contants.URL_HOMEPAGE)
-        # 设备页布局接口
-        self.device_detail(contants.URL_DEVICEDETAIL)
+        # home_thread = threading.Thread(target=self.home_page, args=(contants.URL_HOMEPAGE,))
+        # home_thread.start()
+        # # 设备页布局接口
+        # device_thread = threading.Thread(target=self.device_detail, args=(contants.URL_DEVICEDETAIL,))
+        # device_thread.start()
+        # # 个人名片页浏览接口
+        # visiting_thread = threading.Thread(target=self.visiting_card, args=(contants.URL_VISITCARD,))
+        # visiting_thread.start()
+        self.work_list.append(self.home_page)
+        self.url_list.append(contants.URL_HOMEPAGE)
+        self.work_list.append(self.device_detail)
+        self.url_list.append(contants.URL_DEVICEDETAIL)
+        self.work_list.append(self.visiting_card)
+        self.url_list.append(contants.URL_VISITCARD)
+
+
+
+
+
+
+
 
 def main():
     p_tubo = TuBoPostAPI(contants.DOMAIN)
     p_tubo.run()
+    for work in p_tubo.work_list:
+        work_thread = threading.Thread(target=work, args=(p_tubo.url_list[p_tubo.offset],))
+        work_thread.start()
+        p_tubo.offset += 1
 
 if __name__ == '__main__':
     main()
