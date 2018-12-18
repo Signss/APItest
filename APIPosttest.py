@@ -142,36 +142,46 @@ class TuBoPostAPI(object):
                 else:
                     utils.correct_response(url, response, r_dict, self.file)
 
+    # 个人名片页编辑接口1
+    def edit_VisitingCard(self, url):
+        try:
+            headers = {
+                'Authorization': self.Authorization
+            }
+            response = requests.post(self.domain + url, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
 
-
-
-
-
-
-
-
-
-
-
+                if len(r_dict.get('data')) < compare_contants.DEVICEDETAIL_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict.get('data')), response.status_code)
+                elif len(compare_content) < compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
 
 
     # post请求运行函数
     def run(self):
         # 首页布局接口
-        # home_thread = threading.Thread(target=self.home_page, args=(contants.URL_HOMEPAGE,))
-        # home_thread.start()
-        # # 设备页布局接口
-        # device_thread = threading.Thread(target=self.device_detail, args=(contants.URL_DEVICEDETAIL,))
-        # device_thread.start()
-        # # 个人名片页浏览接口
-        # visiting_thread = threading.Thread(target=self.visiting_card, args=(contants.URL_VISITCARD,))
-        # visiting_thread.start()
         self.work_list.append(self.home_page)
         self.url_list.append(contants.URL_HOMEPAGE)
+        # 设备页布局接口
         self.work_list.append(self.device_detail)
         self.url_list.append(contants.URL_DEVICEDETAIL)
+        # 个人名片页浏览接口
         self.work_list.append(self.visiting_card)
         self.url_list.append(contants.URL_VISITCARD)
+        self.edit_VisitingCard(contants.URL_EDITVISCARD)
 
 
 
