@@ -200,8 +200,22 @@ class TuBoPostAPI(object):
                 else:
                     utils.correct_response(url, response, r_dict, self.file)
 
-    # 删除直播
-    def activity_delete(self, url):
+    # 摄影师加入
+    def camerist_invite(self, url):
+        try:
+            payload = {'id': int(self.create_delete_id)}
+            print(payload)
+            headers = {
+                'Authorization': self.Authorization,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            response = requests.post(self.domain + url, data=payload, headers=headers)
+            print(response.json())
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+
+    # 开始直播
+    def activity_start(self, url):
         try:
             payload = {'id': self.create_delete_id}
             headers = {
@@ -228,6 +242,70 @@ class TuBoPostAPI(object):
                     self.response_err_file.write(str(compare_content) + '\n')
                 else:
                     utils.correct_response(url, response, r_dict, self.file)
+
+    # 关闭直播
+    def activity_close(self, url):
+        try:
+            payload = {'id': int(self.create_delete_id)}
+            headers = {
+                'Authorization': self.Authorization,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            response = requests.post(self.domain + url, data=payload, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict) < compare_contants.DELETE_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
+                elif len(compare_content) < compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
+
+
+    # 删除直播
+    def activity_delete(self, url):
+        try:
+            payload = {'id': int(self.create_delete_id)}
+            headers = {
+                'Authorization': self.Authorization,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            response = requests.post(self.domain + url, data=payload, headers=headers)
+        except RequestException as e:
+            self.deal_request(self.request_err_file, url, e)
+        else:
+            try:
+                r_dict = response.json()
+            except ValueError as e:
+                self.deal_json(self.json_err_file, url, e, response.status_code)
+            else:
+                code = r_dict.get('code')
+                compare_content = {'url': url, '状态码': response.status_code, 'pass': False}
+                if code != compare_contants.COMMON_CODE:
+                    compare_content['code'] = code
+
+                if len(r_dict) < compare_contants.DELETE_DATA_LENGTH:
+                    self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
+                elif len(compare_content) < compare_contants.LACK_NUM:
+                    self.response_err_file.write(str(compare_content) + '\n')
+                else:
+                    utils.correct_response(url, response, r_dict, self.file)
+
+
+
+
+
 
 
 
@@ -266,7 +344,15 @@ class TuBoPostAPI(object):
         # self.visiting_card(contants.URL_VISITCARD)
         # 个人名片页编辑接口
         # self.editVisiting_card(contants.URL_EDITVISCARD)
+        # 发起直播
         self.activity_create(contants.URL_CREATE)
+
+        # 开始直播
+        self.activity_start(contants.URL_ACTIVITY_START)
+        # 摄影师加入
+        self.camerist_invite(contants.URL_INVITE)
+        # 关闭直播
+        self.activity_close(contants.URL_ACTIVITY_CLOSE)
         # 删除直播
         self.activity_delete(contants.URL_ACTIVITY_DELETE)
         # 图片上传成功回调

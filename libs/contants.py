@@ -121,9 +121,30 @@ DATA = {
     "url": "/app/activity/154235132510815860/images/c55717edfaac1a62eed6f6d28e6f0a20f4c755e5.jpg",
 }
 
+# 活动接口 授权信息Header+Token 参数活动id
 # 修改活动
 URL_ACTIVITY_EDIT = '/activity/edit'
 
 # 删除直播
 URL_ACTIVITY_DELETE = '/activity/delete'
+
+# 开始直播
+URL_ACTIVITY_START = '/activity/start'
+
+# 关闭直播
+URL_ACTIVITY_CLOSE = '/activity/close'
+
+# 摄影师参数id
+CAMERIST_AC_ID = 1032
+# 摄影师加入
+URL_INVITE = '/camerist/invite'
+
+# 摄影师退出直播
+URL_QUIT = '/camerist/quit'
+
+# 摄影师 被 移出直播
+URL_OUT = '/camerist/out'
+
+# 分配摄影师到场地
+URL_ALLOT = '/camerist/allot'
 
