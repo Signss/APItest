@@ -24,6 +24,13 @@ headers = {'Authorization': authon}
 upsign = requests.get(url_uploadsign, params=uploadsigin_data, headers=headers)
 print(upsign.json())
 
-a = [1,2,3,4,5]
-for b in a:
-    print(a.index(b))
+
+a = 3
+b = 6
+c = 7
+
+
+
+
+
+

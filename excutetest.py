@@ -49,6 +49,7 @@ def email_content(send_list):
 
 def main():
     send_list = deal_get()
+    print(send_list)
     pass_str = email_content(send_list)
     content = email_str + pass_str
     utils.send_email(content)

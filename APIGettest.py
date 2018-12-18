@@ -1,4 +1,4 @@
-import requests
+import requests, json
 from requests.exceptions import RequestException
 from libs import utils, contants, compare_contants
 
@@ -867,6 +867,7 @@ class TuBoGetAPI(object):
                     compare_content['code'] = code
                 elif data != compare_contants.INVITE_CODE_DATA:
                     compare_content['data'] = data
+                print(compare_content)
                 if len(r_dict) < compare_contants.INVITECODE_DATA_LENGTH:
                     self.deal_lack(self.lack_response_err_file, url, len(r_dict), response.status_code)
                 elif len(compare_content) > compare_contants.LACK_NUM:
@@ -943,9 +944,6 @@ class TuBoGetAPI(object):
         self.response_err_file.close()
         # 响应数据字段缺少保存文件
         self.lack_response_err_file.close()
-
-
-
 
 
 

@@ -63,14 +63,13 @@ def deal_err_file(filename, type):
         else:
             str2 = data.replace('\n', '').replace(' ', '').replace("'", '"')
             for line in f:
-                # print(line)
                 str1 = line.replace('\n','').replace(' ','').replace("'",'"')
-                # print(str1)
                 err_json.append(str1)
+
             err_json.append(str2)
             for url in err_json:
 
-                url_lsit.append(json.loads(url).get('url'))
+                url_lsit.append(eval(url).get('url'))
             return url_lsit
 
 
