@@ -1,3 +1,5 @@
+import datetime
+
 # 测试环境接口域名
 DOMAIN = 'https://dapi.livepic.com.cn'
 # 用户手机号
@@ -93,3 +95,35 @@ URL_DEVICEDETAIL = '/app/content/deviceDetail'
 URL_VISITCARD = '/app/content/visitingCard'
 # 个人名片页编辑接口 授权信息Header+Token, 参数无
 URL_EDITVISCARD = '/app/content/editVisitingCard'
+
+# 活动页接口 请求参数title activity_time 授权信息Header+Token
+URL_CREATE = '/app/v2/activity/create'
+create_t = datetime.datetime.now().strftime('%Y-%m-%d')
+CREATE_TITLE = 'xia_test' + create_t
+CREATE_TIME = create_t
+
+# https://www.baidu.com/img/bd_logo1.png?where=super
+
+# 图片上传成功回调
+URL_CALLBACK = '/app/upload/callback'
+DATA = {
+    "code": 200,
+	"uid": 10,
+	"activity_id": 53,
+	"file_size": 182157,
+    "image-frames": 1,
+    "image-height": 1280,
+    "image-type": "JPEG",
+    "image-width": 960,
+    "message": "ok",
+    "mimetype": "image/jpeg",
+    "time": "1542351989",
+    "url": "/app/activity/154235132510815860/images/c55717edfaac1a62eed6f6d28e6f0a20f4c755e5.jpg",
+}
+
+# 修改活动
+URL_ACTIVITY_EDIT = '/activity/edit'
+
+# 删除直播
+URL_ACTIVITY_DELETE = '/activity/delete'
+
