@@ -885,85 +885,6 @@ class TuBoGetAPI(object):
                     }
                     self.file.write(str(content) + '\n')
 
-    # 启动函数
-    # def run(self):
-    #     # 配置参数接口
-    #     config_thread = threading.Thread(target=self.url_config, args=(contants.URL_CONFIG,))
-    #     config_thread.start()
-    #     # 升级更新接口
-    #     update_thread = threading.Thread(target=self.check_update, args=(contants.URL_CHECKUPDATE,))
-    #     update_thread.start()
-    #     # 购买页接口
-    #     buy_thread = threading.Thread(target=self.buy, args=(contants.URL_BY,))
-    #     buy_thread.start()
-    #     # 城市列表接口
-    #     city_thread = threading.Thread(target=self.city, args=(contants.URL_CITY,))
-    #     city_thread.start()
-    #     # 又拍云上传签名
-    #     uploadsign_thread = threading.Thread(target=self.uploadsign, args=(contants.URL_UPLOADSIGN,))
-    #     uploadsign_thread.start()
-    #     # 活动列表
-    #     activity_thread = threading.Thread(target=self.activity, args=(contants.URL_ACTIVITY,))
-    #     activity_thread.start()
-    #     # 计费商品列表
-    #     goods_thread = threading.Thread(target=self.goods, args=(contants.URL_GOODS,))
-    #     goods_thread.start()
-    #     # 活动资料页
-    #     data_thread = threading.Thread(target=self.activity_data, args=(contants.URL_ACTIVITY_DATA,))
-    #     data_thread.start()
-    #     # 摄影师管理
-    #     camerist_thread = threading.Thread(target=self.camerist, args=(contants.URL_CAMERIST,))
-    #     camerist_thread.start()
-    #     # 直播原相册
-    #     album_thread = threading.Thread(target=self.picture_album, args=(contants.URL_PIC_ALBUM,))
-    #     album_thread.start()
-    #     # 直播详情
-    #     detail_thread = threading.Thread(target=self.picture_detail, args=(contants.URL_PIC_DETAIL,))
-    #     detail_thread.start()
-    #     # 用户已上传的图片列表
-    #     picture_thread = threading.Thread(target=self.user_picture, args=(contants.URL_USER_PIC,))
-    #     picture_thread.start()
-    #     # 导播管理界面
-    #     editor_thread = threading.Thread(target=self.editor_list, args=(contants.URL_EDITOR,))
-    #     editor_thread.start()
-    #     # 编辑室列表
-    #     edit_thread = threading.Thread(target=self.edit_list, args=(contants.URL_EDIT,))
-    #     edit_thread.start()
-    #     # 直播预约摄影师列表
-    #     reserve_thread = threading.Thread(target=self.edit_list, args=(contants.URL_EDIT,))
-    #     reserve_thread.start()
-    #     self.reserve_list(contants.URL_RESERVE)
-    #     # 直播预sn
-    #     self.prep(contants.URL_PREP)
-    #     # 分类列表
-    #     self.category(contants.URL_CATEGORY)
-    #     # 我预约别人的
-    #     self.user_mybooking(contants.URL_USER_MY)
-    #     # 别人预约我的
-    #     self.user_mycust(contants.URL_MYCUSTOMER)
-    #     # 我的关注列表
-    #     self.user_subscribe(contants.URL_USER_SUB)
-    #     # 分享页加强版1
-    #     self.share(contants.URL_SHARE)
-    #     # 消息列表
-    #     self.user_message(contants.URL_MESSAGE)
-    #     # banner
-    #     self.banner(contants.URL_BANNER)
-    #     # 验证邀请码
-    #     self.invite_code(contants.URL_INVITE_CODE)
-    #
-    #
-    #
-    #
-    #     # 关闭文件
-    #     # 请求失败保存文件
-    #     self.request_err_file.close()
-    #     # json转换失败保存文件
-    #     self.json_err_file.close()
-    #     # 响应数据字段错误保存文件
-    #     self.response_err_file.close()
-    #     # 响应数据字段缺少保存文件
-    #     self.lack_response_err_file.close()
 
     def run(self):
         # 配置参数接口
@@ -1030,9 +951,14 @@ class TuBoGetAPI(object):
         self.work_list.append(self.share)
         self.url_list.append(contants.URL_SHARE)
         # 消息列表
-
-
-
+        self.work_list.append(self.user_message)
+        self.url_list.append(contants.URL_MESSAGE)
+        # banner
+        self.work_list.append(self.banner)
+        self.url_list.append(contants.URL_BANNER)
+        # 验证邀请码
+        self.work_list.append(self.invite_code)
+        self.url_list.append(contants.URL_INVITE_CODE)
 
 
         # 关闭文件
@@ -1045,12 +971,18 @@ class TuBoGetAPI(object):
         # 响应数据字段缺少保存文件
         self.lack_response_err_file.close()
 
+def main():
+    get_test = TuBoGetAPI(contants.DOMAIN)
+    get_test.run()
+    for work in get_test.work_list:
+        work_thread = threading.Thread(target=work, args=(get_test.url_list[get_test.offset],))
+        work_thread.start()
+        get_test.offset += 1
+
 
 if __name__ == '__main__':
-    get_test = TuBoGetAPI(contants.DOMAIN)
     start = time.clock()
-    get_test.run()
+    main()
     end = time.clock()
-    print(end-start)
-
+    print(end - start)
 
