@@ -135,7 +135,8 @@ URL_ACTIVITY_START = '/activity/start'
 URL_ACTIVITY_CLOSE = '/activity/close'
 
 # 摄影师参数id
-CAMERIST_AC_ID = 1032
+CAMERIST_INVITE_ID = 636
+CAMERIST_UID = 98
 # 摄影师加入
 URL_INVITE = '/camerist/invite'
 
@@ -147,4 +148,30 @@ URL_OUT = '/camerist/out'
 
 # 分配摄影师到场地
 URL_ALLOT = '/camerist/allot'
+
+# 用户摄影师修改资料
+URL_USER_UPDATE = '/user/update'
+
+# 认证摄影师
+# URL_USER_IDENTITY = '/user/identity'
+# SN = '154328393018212518'
+
+# 预约摄影师
+URL_BOOKING = '/booking'
+BOOK_DATA = {
+    'name': 'xiayong',
+    'mobile': '18601927460',
+    'location': '上海',
+    'category_id': 1,
+    'to_uid': 0,
+    'when': '2018-12-12'
+}
+
+# 举报
+URL_REPORT = '/report'
+REPORT_DATA = {
+    'id': 488,
+    'text': 1
+}
+
 

@@ -1,7 +1,7 @@
 import os
 from libs import contants, utils
 from APIGettest import TuBoGetAPI
-
+from APIPosttest import TuBoPostAPI
 
 # time.sleep(10)
 # os.remove('json_err_file.txt')
@@ -12,6 +12,8 @@ email_str = '<h1>图播接口测试结果</h1><br/>'
 def deal_get():
     get_test = TuBoGetAPI(contants.DOMAIN)
     get_test.run()
+    post_test = TuBoPostAPI(contants.DOMAIN)
+    post_test.run()
     send_list = []
     json_result = utils.deal_err_file('json_err_file.txt',  'json转换')
     send_list.append(json_result)
